@@ -1,0 +1,328 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "SehatSetu Healthcare Platform API",
+    "description": "Production REST API for SehatSetu healthcare platform powering Patient booking, Doctor consultations, Medical records, and Admin analytics.",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000",
+      "description": "Local Spring Boot Server"
+    }
+  ],
+  "paths": {
+    "/api/config": {
+      "get": {
+        "summary": "Get Platform Configuration",
+        "responses": {
+          "200": { "description": "Platform settings and metadata" }
+        }
+      }
+    },
+    "/api/specialities": {
+      "get": {
+        "summary": "List Medical Specialities",
+        "responses": {
+          "200": { "description": "List of medical specialities" }
+        }
+      }
+    },
+    "/api/clinics": {
+      "get": {
+        "summary": "List Clinics",
+        "responses": {
+          "200": { "description": "List of multi-city clinics" }
+        }
+      }
+    },
+    "/api/auth/demo-login": {
+      "post": {
+        "summary": "Quick Demo Account Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": { "type": "string", "example": "PATIENT" },
+                  "password": { "type": "string", "example": "Doctor@123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT token and user profile" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "User Credentials Login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "aarav.singh@gmail.com" },
+                  "password": { "type": "string", "example": "Patient@123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT token and user profile" }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register New Patient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "priyanka.verma@example.in" },
+                  "password": { "type": "string", "example": "SecurePassword@123" },
+                  "full_name": { "type": "string", "example": "Priyanka Verma" },
+                  "mobile": { "type": "string", "example": "+91 98765 43210" },
+                  "city": { "type": "string", "example": "Gurugram" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT token and new user profile" }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "summary": "Get Authenticated User Profile",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User profile with role-specific details" }
+        }
+      }
+    },
+    "/api/doctors": {
+      "get": {
+        "summary": "Search & Filter Doctors",
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "speciality_id", "in": "query", "schema": { "type": "integer" } },
+          { "name": "city", "in": "query", "schema": { "type": "string" } },
+          { "name": "sort_by", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "List of matching verified doctors" }
+        }
+      }
+    },
+    "/api/doctors/{id}": {
+      "get": {
+        "summary": "Get Doctor Detailed Profile",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "responses": {
+          "200": { "description": "Doctor profile with clinic & schedule details" }
+        }
+      }
+    },
+    "/api/doctors/{id}/slots": {
+      "get": {
+        "summary": "Get Doctor Available Slots for Date",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } },
+          { "name": "date", "in": "query", "required": true, "schema": { "type": "string", "example": "2026-10-05" } }
+        ],
+        "responses": {
+          "200": { "description": "Available time slots" }
+        }
+      }
+    },
+    "/api/appointments/book": {
+      "post": {
+        "summary": "Book Appointment",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "doctor_id": { "type": "integer", "example": 1 },
+                  "appointment_date": { "type": "string", "example": "2026-10-05" },
+                  "appointment_time": { "type": "string", "example": "10:00" },
+                  "consultation_type": { "type": "string", "example": "In-Clinic" },
+                  "reason_for_visit": { "type": "string", "example": "Routine checkup" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Appointment reference and confirmation" }
+        }
+      }
+    },
+    "/api/appointments/{id}/reschedule": {
+      "put": {
+        "summary": "Reschedule Appointment",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appointment_date": { "type": "string", "example": "2026-10-06" },
+                  "appointment_time": { "type": "string", "example": "11:00" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Reschedule status" }
+        }
+      }
+    },
+    "/api/appointments/{id}/cancel": {
+      "put": {
+        "summary": "Cancel Appointment",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": { "type": "string", "example": "Urgent travel" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cancellation confirmation" }
+        }
+      }
+    },
+    "/api/appointments/my": {
+      "get": {
+        "summary": "Get My Appointments (Patient or Doctor)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "List of user appointments" }
+        }
+      }
+    },
+    "/api/medical-records": {
+      "get": {
+        "summary": "Get Patient Medical History",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Patient medical records timeline" }
+        }
+      },
+      "post": {
+        "summary": "Add Doctor Consultation Record",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "patient_id": { "type": "integer", "example": 8 },
+                  "appointment_id": { "type": "integer", "example": 12 },
+                  "record_date": { "type": "string", "example": "2026-10-05" },
+                  "diagnosis_title": { "type": "string", "example": "Tension Headache" },
+                  "clinical_notes": { "type": "string", "example": "Neurological exam normal." },
+                  "prescription_notes": { "type": "string", "example": "Tab Paracetamol 650mg SOS" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Medical record ID" }
+        }
+      }
+    },
+    "/api/feedback": {
+      "post": {
+        "summary": "Submit Patient Feedback",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "appointment_id": { "type": "integer", "example": 12 },
+                  "rating": { "type": "integer", "example": 5 },
+                  "comment": { "type": "string", "example": "Great doctor!" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Feedback confirmation" }
+        }
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "summary": "Get User Notifications",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "User notifications" }
+        }
+      }
+    },
+    "/api/admin/stats": {
+      "get": {
+        "summary": "Get Admin Platform KPIs",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Platform totals (users, doctors, appointments)" }
+        }
+      }
+    },
+    "/api/admin/analytics": {
+      "get": {
+        "summary": "Get Analytics Charts Data",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Analytics distributions by city, speciality, trends" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

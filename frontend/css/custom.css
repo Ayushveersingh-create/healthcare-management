@@ -1,0 +1,162 @@
+/* SehatSetu Custom Design Tokens & Styles */
+
+:root {
+  --primary: #0F766E;        /* Deep Teal */
+  --primary-hover: #0D9488;  /* Vibrant Teal */
+  --primary-light: #F0FDFA;  /* Teal Tint */
+  --accent-saffron: #D97706; /* Warm Amber */
+  --health-green: #10B981;   /* Emerald */
+  --bg-main: #F8FAFC;        /* Slate 50 */
+  --card-bg: #FFFFFF;
+  --text-main: #0F172A;      /* Slate 900 */
+  --text-muted: #64748B;     /* Slate 500 */
+  --border-color: #E2E8F0;   /* Slate 200 */
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Status Badges */
+.badge-confirmed {
+  background-color: #DEF7EC;
+  color: #03543F;
+  border: 1px solid #BCF0DA;
+}
+.badge-requested {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.badge-completed {
+  background-color: #E0E7FF;
+  color: #3730A3;
+  border: 1px solid #C7D2FE;
+}
+.badge-cancelled {
+  background-color: #FDE8E8;
+  color: #9B1C1C;
+  border: 1px solid #F8B4B4;
+}
+.badge-verified {
+  background-color: #D1FAE5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+.badge-pending {
+  background-color: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+}
+
+/* Time Slot Picker Buttons */
+.slot-pill {
+  transition: all 0.15s ease-in-out;
+}
+.slot-available {
+  background-color: #FFFFFF;
+  color: #0F766E;
+  border: 1px solid #99F6E4;
+}
+.slot-available:hover {
+  background-color: #CCFBF1;
+  border-color: #14B8A6;
+  transform: translateY(-1px);
+}
+.slot-selected {
+  background-color: #0F766E !important;
+  color: #FFFFFF !important;
+  border-color: #0F766E !important;
+  box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.3);
+}
+.slot-booked {
+  background-color: #F1F5F9;
+  color: #94A3B8;
+  border: 1px solid #E2E8F0;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+.slot-break {
+  background-color: #FEF3C7;
+  color: #D97706;
+  border: 1px dashed #FCD34D;
+  cursor: not-allowed;
+}
+
+/* Timeline Components */
+.timeline-stem {
+  position: relative;
+  padding-left: 2rem;
+}
+.timeline-stem::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+  bottom: -1rem;
+  width: 2px;
+  background-color: #CBD5E1;
+}
+.timeline-dot {
+  position: absolute;
+  left: 0.15rem;
+  top: 0.35rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+  background-color: #0F766E;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 0 0 2px #99F6E4;
+}
+
+/* Skeleton Loading Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Print Styles for Prescriptions & Medical Summaries */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-record-area, #printable-record-area * {
+    visibility: visible;
+  }
+  #printable-record-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    box-shadow: none;
+    border: none;
+  }
+}
